@@ -6,8 +6,10 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
-    "lint": "eslint .",
-    "preview": "vite preview"
+    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "preview": "vite preview",
+    "format": "prettier --write \"src/**/*.{ts,tsx,css,md}\"",
+    "ci:format": "prettier --check \"src/**/*.{ts,tsx,css,md}\""
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.8.2",
