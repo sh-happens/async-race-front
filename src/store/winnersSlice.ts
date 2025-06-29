@@ -6,6 +6,7 @@ import type {
   SortField,
   SortOrder,
 } from '../types';
+import { fetchWinners, saveWinnerThunk } from './winnersThunks';
 
 interface WinnersState extends LoadingState {
   winners: WinnerWithCar[];
@@ -29,14 +30,8 @@ const winnersSlice = createSlice({
   name: 'winners',
   initialState,
   reducers: {
-    setWinners: (state, action: PayloadAction<WinnerWithCar[]>) => {
-      state.winners = action.payload;
-    },
     setCurrentPage: (state, action: PayloadAction<number>) => {
       state.currentPage = action.payload;
-    },
-    setTotalCount: (state, action: PayloadAction<number>) => {
-      state.totalCount = action.payload;
     },
     setSortField: (state, action: PayloadAction<SortField>) => {
       state.sortField = action.payload;
@@ -44,23 +39,36 @@ const winnersSlice = createSlice({
     setSortOrder: (state, action: PayloadAction<SortOrder>) => {
       state.sortOrder = action.payload;
     },
-    setLoading: (state, action: PayloadAction<boolean>) => {
-      state.isLoading = action.payload;
+    clearError: (state) => {
+      state.error = null;
     },
-    setError: (state, action: PayloadAction<string | null>) => {
-      state.error = action.payload;
-    },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchWinners.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(fetchWinners.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.winners = action.payload.winners;
+        state.totalCount = action.payload.totalCount;
+        state.currentPage = action.payload.page;
+      })
+      .addCase(fetchWinners.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.error.message || 'Failed to fetch winners';
+      });
+
+    builder
+      .addCase(saveWinnerThunk.fulfilled, () => {})
+      .addCase(saveWinnerThunk.rejected, (state, action) => {
+        state.error = action.error.message || 'Failed to save winner';
+      });
   },
 });
 
-export const {
-  setWinners,
-  setCurrentPage,
-  setTotalCount,
-  setSortField,
-  setSortOrder,
-  setLoading,
-  setError,
-} = winnersSlice.actions;
+export const { setCurrentPage, setSortField, setSortOrder, clearError } =
+  winnersSlice.actions;
 
 export default winnersSlice.reducer;

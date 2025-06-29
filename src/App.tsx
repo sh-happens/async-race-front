@@ -1,35 +1,88 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React, { useEffect } from 'react';
+import { useAppDispatch, useAppSelector } from './hooks/redux';
+import { fetchCars, createCarThunk } from './store/garageThunks';
+import { generateRandomCar } from './utils/carGenerator';
+import './index.css';
 
-function App() {
-  const [count, setCount] = useState(0)
+const App: React.FC = () => {
+  const dispatch = useAppDispatch();
+  const { cars, isLoading, error, totalCount } = useAppSelector(state => state.garage);
+
+  useEffect(() => {
+    dispatch(fetchCars({ page: 1 }));
+  }, [dispatch]);
+
+  const handleCreateRandomCar = () => {
+    const randomCar = generateRandomCar();
+    dispatch(createCarThunk(randomCar));
+  };
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
+    <div style={{ padding: '20px', maxWidth: '1200px', margin: '0 auto' }}>
+      <header style={{ textAlign: 'center', marginBottom: '30px' }}>
+        <h1>🏎️ Async Race</h1>
+        <p>API Integration Test - Phase 2 Complete!</p>
+      </header>
+
+      <div style={{ marginBottom: '20px' }}>
+        <button
+          onClick={handleCreateRandomCar}
+          style={{
+            padding: '12px 24px',
+            backgroundColor: '#007bff',
+            color: 'white',
+            border: 'none',
+            borderRadius: '4px',
+            cursor: 'pointer',
+            fontSize: '16px'
+          }}
+        >
+          Create Random Car
         </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
+        <p style={{ marginTop: '10px', color: '#666' }}>
+          Total cars: {totalCount}
         </p>
       </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
 
-export default App
+      {isLoading && <p>Loading...</p>}
+      {error && <p style={{ color: 'red' }}>Error: {error}</p>}
+
+      <div style={{ display: 'grid', gap: '12px' }}>
+        {cars.map(car => (
+          <div
+            key={car.id}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '12px',
+              padding: '12px',
+              border: '1px solid #ddd',
+              borderRadius: '4px',
+              backgroundColor: '#f9f9f9'
+            }}
+          >
+            <div
+              style={{
+                width: '40px',
+                height: '20px',
+                backgroundColor: car.color,
+                border: '1px solid #333',
+                borderRadius: '2px'
+              }}
+            />
+            <span style={{ fontWeight: '500' }}>{car.name}</span>
+            <span style={{ color: '#666' }}>#{car.id}</span>
+          </div>
+        ))}
+      </div>
+
+      {cars.length === 0 && !isLoading && (
+        <p style={{ textAlign: 'center', color: '#666', marginTop: '40px' }}>
+          No cars yet. Create your first car! 🚗
+        </p>
+      )}
+    </div>
+  );
+};
+
+export default App;

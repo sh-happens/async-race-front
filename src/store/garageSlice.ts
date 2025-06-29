@@ -1,6 +1,15 @@
 import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import type { Car, LoadingState } from '../types';
+import {
+  fetchCars,
+  createCarThunk,
+  updateCarThunk,
+  deleteCarThunk,
+  createRandomCarsThunk,
+  startEngineThunk,
+  stopEngineThunk,
+} from './garageThunks';
 
 interface GarageState extends LoadingState {
   cars: Car[];
@@ -8,6 +17,7 @@ interface GarageState extends LoadingState {
   totalCount: number;
   selectedCar: Car | null;
   racingCars: Set<number>;
+  engineData: Record<number, { velocity: number; distance: number }>;
 }
 
 const initialState: GarageState = {
@@ -16,6 +26,7 @@ const initialState: GarageState = {
   totalCount: 0,
   selectedCar: null,
   racingCars: new Set(),
+  engineData: {},
   isLoading: false,
   error: null,
 };
@@ -24,37 +35,14 @@ const garageSlice = createSlice({
   name: 'garage',
   initialState,
   reducers: {
-    setCars: (state, action: PayloadAction<Car[]>) => {
-      state.cars = action.payload;
-    },
-    addCar: (state, action: PayloadAction<Car>) => {
-      state.cars.push(action.payload);
-      state.totalCount += 1;
-    },
-    updateCar: (state, action: PayloadAction<Car>) => {
-      const index = state.cars.findIndex((car) => car.id === action.payload.id);
-      if (index !== -1) {
-        state.cars[index] = action.payload;
-      }
-    },
-    removeCar: (state, action: PayloadAction<number>) => {
-      state.cars = state.cars.filter((car) => car.id !== action.payload);
-      state.totalCount -= 1;
-    },
     setCurrentPage: (state, action: PayloadAction<number>) => {
       state.currentPage = action.payload;
-    },
-    setTotalCount: (state, action: PayloadAction<number>) => {
-      state.totalCount = action.payload;
     },
     setSelectedCar: (state, action: PayloadAction<Car | null>) => {
       state.selectedCar = action.payload;
     },
-    setLoading: (state, action: PayloadAction<boolean>) => {
-      state.isLoading = action.payload;
-    },
-    setError: (state, action: PayloadAction<string | null>) => {
-      state.error = action.payload;
+    clearError: (state) => {
+      state.error = null;
     },
     addRacingCar: (state, action: PayloadAction<number>) => {
       state.racingCars.add(action.payload);
@@ -66,18 +54,89 @@ const garageSlice = createSlice({
       state.racingCars.clear();
     },
   },
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchCars.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(fetchCars.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.cars = action.payload.cars;
+        state.totalCount = action.payload.totalCount;
+        state.currentPage = action.payload.page;
+      })
+      .addCase(fetchCars.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.error.message || 'Failed to fetch cars';
+      });
+
+    builder
+      .addCase(createCarThunk.fulfilled, (state, action) => {
+        state.cars.push(action.payload);
+        state.totalCount += 1;
+      })
+      .addCase(createCarThunk.rejected, (state, action) => {
+        state.error = action.error.message || 'Failed to create car';
+      });
+
+    builder
+      .addCase(updateCarThunk.fulfilled, (state, action) => {
+        const index = state.cars.findIndex(
+          (car) => car.id === action.payload.id
+        );
+        if (index !== -1) {
+          state.cars[index] = action.payload;
+        }
+        state.selectedCar = null;
+      })
+      .addCase(updateCarThunk.rejected, (state, action) => {
+        state.error = action.error.message || 'Failed to update car';
+      });
+
+    builder
+      .addCase(deleteCarThunk.fulfilled, (state, action) => {
+        state.cars = state.cars.filter((car) => car.id !== action.payload);
+        state.totalCount -= 1;
+        if (state.selectedCar?.id === action.payload) {
+          state.selectedCar = null;
+        }
+      })
+      .addCase(deleteCarThunk.rejected, (state, action) => {
+        state.error = action.error.message || 'Failed to delete car';
+      });
+
+    builder
+      .addCase(createRandomCarsThunk.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(createRandomCarsThunk.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.totalCount += action.payload.length;
+      })
+      .addCase(createRandomCarsThunk.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.error.message || 'Failed to create random cars';
+      });
+
+    builder
+      .addCase(startEngineThunk.fulfilled, (state, action) => {
+        const { carId, velocity, distance } = action.payload;
+        state.engineData[carId] = { velocity, distance };
+        state.racingCars.add(carId);
+      })
+      .addCase(stopEngineThunk.fulfilled, (state, action) => {
+        const carId = action.payload;
+        delete state.engineData[carId];
+        state.racingCars.delete(carId);
+      });
+  },
 });
 
 export const {
-  setCars,
-  addCar,
-  updateCar,
-  removeCar,
   setCurrentPage,
-  setTotalCount,
   setSelectedCar,
-  setLoading,
-  setError,
+  clearError,
   addRacingCar,
   removeRacingCar,
   clearRacingCars,
