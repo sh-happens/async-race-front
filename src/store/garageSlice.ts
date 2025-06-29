@@ -1,3 +1,4 @@
+// src/store/garageSlice.ts
 import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import type { Car, LoadingState } from '../types';
@@ -7,6 +8,7 @@ import {
   updateCarThunk,
   deleteCarThunk,
   createRandomCarsThunk,
+  generateRandomCarsThunk, // Add this import
   startEngineThunk,
   stopEngineThunk,
 } from './garageThunks';
@@ -40,6 +42,9 @@ const garageSlice = createSlice({
     },
     setSelectedCar: (state, action: PayloadAction<Car | null>) => {
       state.selectedCar = action.payload;
+    },
+    clearSelectedCar: (state) => {
+      state.selectedCar = null;
     },
     clearError: (state) => {
       state.error = null;
@@ -119,6 +124,20 @@ const garageSlice = createSlice({
         state.error = action.error.message || 'Failed to create random cars';
       });
 
+    // Add handler for generateRandomCarsThunk
+    builder
+      .addCase(generateRandomCarsThunk.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(generateRandomCarsThunk.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.totalCount += action.payload.length;
+      })
+      .addCase(generateRandomCarsThunk.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.error.message || 'Failed to generate random cars';
+      });
+
     builder
       .addCase(startEngineThunk.fulfilled, (state, action) => {
         const { carId, velocity, distance } = action.payload;
@@ -136,6 +155,7 @@ const garageSlice = createSlice({
 export const {
   setCurrentPage,
   setSelectedCar,
+  clearSelectedCar,
   clearError,
   addRacingCar,
   removeRacingCar,

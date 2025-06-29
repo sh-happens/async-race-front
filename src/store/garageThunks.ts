@@ -2,6 +2,7 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import * as api from '../services/api';
 import type { CarInput } from '../types';
 import { CARS_PER_PAGE } from '../types';
+import { generateRandomCars } from '../utils/carGenerator';
 
 export const fetchCars = createAsyncThunk(
   'garage/fetchCars',
@@ -37,6 +38,15 @@ export const createRandomCarsThunk = createAsyncThunk(
   'garage/createRandomCars',
   async (cars: CarInput[]) => {
     const promises = cars.map((car) => api.createCar(car));
+    return await Promise.all(promises);
+  }
+);
+
+export const generateRandomCarsThunk = createAsyncThunk(
+  'garage/generateRandomCars',
+  async (count: number) => {
+    const randomCars = generateRandomCars(count);
+    const promises = randomCars.map((car) => api.createCar(car));
     return await Promise.all(promises);
   }
 );
