@@ -1,42 +1,235 @@
-#root {
-  max-width: 1280px;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #f5f5f5;
+  color: #333;
+  line-height: 1.6;
+}
+
+.app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-main {
+  flex: 1;
+  padding: 20px;
+  max-width: 1400px;
   margin: 0 auto;
-  padding: 2rem;
+  width: 100%;
+}
+
+.control-button, .submit-button, .nav-button, .pagination-button, .page-number {
+  padding: 8px 16px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background-color: #fff;
+  color: #333;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  min-height: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.control-button:hover, .submit-button:hover, .nav-button:hover, 
+.pagination-button:hover, .page-number:hover {
+  background-color: #f8f9fa;
+  border-color: #007bff;
+  transform: translateY(-1px);
+}
+
+.control-button:disabled, .submit-button:disabled, .pagination-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background-color: #f8f9fa;
+  transform: none;
+}
+
+.control-button.primary, .submit-button.primary {
+  background-color: #007bff;
+  color: white;
+  border-color: #007bff;
+}
+
+.control-button.primary:hover, .submit-button.primary:hover {
+  background-color: #0056b3;
+  border-color: #0056b3;
+}
+
+.control-button.secondary, .submit-button.secondary {
+  background-color: #6c757d;
+  color: white;
+  border-color: #6c757d;
+}
+
+.control-button.secondary:hover, .submit-button.secondary:hover {
+  background-color: #5a6268;
+  border-color: #545b62;
+}
+
+.control-button.delete {
+  background-color: #dc3545;
+  color: white;
+  border-color: #dc3545;
+}
+
+.control-button.delete:hover {
+  background-color: #c82333;
+  border-color: #bd2130;
+}
+
+.control-button.start, .control-button.race-start {
+  background-color: #28a745;
+  color: white;
+  border-color: #28a745;
+}
+
+.control-button.start:hover, .control-button.race-start:hover {
+  background-color: #218838;
+  border-color: #1e7e34;
+}
+
+.control-button.stop, .control-button.race-reset {
+  background-color: #ffc107;
+  color: #212529;
+  border-color: #ffc107;
+}
+
+.control-button.stop:hover, .control-button.race-reset:hover {
+  background-color: #e0a800;
+  border-color: #d39e00;
+}
+
+.control-button.select {
+  background-color: #17a2b8;
+  color: white;
+  border-color: #17a2b8;
+}
+
+.control-button.select:hover {
+  background-color: #138496;
+  border-color: #117a8b;
+}
+
+.control-button.generate-cars {
+  background-color: #6f42c1;
+  color: white;
+  border-color: #6f42c1;
+}
+
+.control-button.generate-cars:hover {
+  background-color: #5a32a3;
+  border-color: #512d92;
+}
+
+.view-title {
+  font-size: 32px;
+  font-weight: bold;
+  margin-bottom: 8px;
+  color: #333;
+}
+
+.panel-title {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  color: #495057;
+}
+
+.error-message {
+  background-color: #f8d7da;
+  color: #721c24;
+  padding: 12px 16px;
+  border-radius: 6px;
+  border: 1px solid #f5c6cb;
+  margin-bottom: 20px;
+  font-weight: 500;
+}
+
+.loading {
   text-align: center;
+  padding: 40px;
+  color: #666;
+  font-size: 18px;
+  font-weight: 500;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: #666;
+  background-color: #fff;
+  border-radius: 8px;
+  border: 2px dashed #ddd;
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
+.empty-state p {
+  margin-bottom: 8px;
+  font-size: 16px;
+}
+
+.empty-state p:first-child {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+input[type="text"], input[type="color"] {
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  transition: border-color 0.2s ease;
+}
+
+input[type="text"]:focus, input[type="color"]:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+}
+
+@media (max-width: 768px) {
+  .app-main {
+    padding: 15px;
   }
-  to {
-    transform: rotate(360deg);
+  
+  .control-button, .submit-button {
+    padding: 10px 16px;
+    font-size: 16px;
+    min-height: 44px;
+  }
+
+  .view-title {
+    font-size: 28px;
   }
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
+@media (max-width: 500px) {
+  .app-main {
+    padding: 10px;
   }
-}
 
-.card {
-  padding: 2em;
-}
+  .view-title {
+    font-size: 24px;
+  }
 
-.read-the-docs {
-  color: #888;
+  .control-button, .submit-button {
+    padding: 12px 16px;
+    font-size: 16px;
+    min-height: 48px;
+  }
 }

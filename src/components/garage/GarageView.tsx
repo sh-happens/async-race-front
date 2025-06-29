@@ -3,6 +3,7 @@ import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import { fetchCars } from '../../store/garageThunks';
 import { setCurrentPage } from '../../store/garageSlice';
 import { CARS_PER_PAGE } from '../../types';
+import './GarageView.css';
 import CarCreationPanel from './CarCreationPanel';
 import RaceControlPanel from './RaceControlPanel';
 import Pagination from '../common/Pagination';

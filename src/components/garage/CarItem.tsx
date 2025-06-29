@@ -3,6 +3,7 @@ import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import { deleteCarThunk, startEngineThunk, stopEngineThunk } from '../../store/garageThunks';
 import { setSelectedCar } from '../../store/garageSlice';
 import type { Car } from '../../types';
+import './CarItem.css';
 
 interface CarItemProps {
   car: Car;

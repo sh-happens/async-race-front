@@ -3,6 +3,7 @@ import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import { createCarThunk, updateCarThunk } from '../../store/garageThunks';
 import { clearSelectedCar } from '../../store/garageSlice';
 import type { CarInput } from '../../types';
+import './CarCreationPanel.css';
 
 const CarCreationPanel: React.FC = () => {
   const dispatch = useAppDispatch();

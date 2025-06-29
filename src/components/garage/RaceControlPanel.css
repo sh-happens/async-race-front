@@ -1,0 +1,82 @@
+.race-control-panel {
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  padding: 20px;
+  background-color: #f8f9fa;
+}
+
+.control-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.race-buttons {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-start;
+}
+
+.generation-buttons {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.control-button.race-start {
+  font-size: 16px;
+  padding: 12px 20px;
+  min-width: 120px;
+}
+
+.control-button.race-reset {
+  font-size: 16px;
+  padding: 12px 20px;
+  min-width: 120px;
+}
+
+.control-button.generate-cars {
+  font-size: 14px;
+  padding: 12px 20px;
+  white-space: nowrap;
+}
+
+@media (max-width: 768px) {
+  .race-buttons {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .race-buttons .control-button {
+    width: 100%;
+    min-width: auto;
+  }
+
+  .control-button.generate-cars {
+    width: 100%;
+  }
+}
+
+@media (max-width: 500px) {
+  .race-control-panel {
+    padding: 16px;
+  }
+
+  .control-buttons {
+    gap: 12px;
+  }
+
+  .race-buttons {
+    gap: 8px;
+  }
+
+  .control-button.race-start,
+  .control-button.race-reset {
+    padding: 14px 20px;
+    font-size: 16px;
+  }
+
+  .control-button.generate-cars {
+    padding: 14px 20px;
+    font-size: 14px;
+  }
+}

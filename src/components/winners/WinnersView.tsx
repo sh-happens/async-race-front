@@ -1,10 +1,10 @@
-// src/components/winners/WinnersView.tsx
 import React, { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import { fetchWinners } from '../../store/winnersThunks';
 import { setCurrentPage } from '../../store/winnersSlice';
 import Pagination from '../common/Pagination';
 import { WINNERS_PER_PAGE } from '../../types';
+import './WinnersView.css';
 import WinnersTable from './WinnersTable';
 
 const WinnersView: React.FC = () => {

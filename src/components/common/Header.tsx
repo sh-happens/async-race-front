@@ -2,6 +2,7 @@ import React from 'react';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import { setCurrentView } from '../../store/uiSlice';
 import type { View } from '../../types';
+import './Header.css';
 
 const Header: React.FC = () => {
   const dispatch = useAppDispatch();

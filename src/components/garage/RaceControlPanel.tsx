@@ -4,6 +4,7 @@ import { generateRandomCarsThunk } from '../../store/garageThunks';
 import { setRaceInProgress } from '../../store/uiSlice';
 import { clearRacingCars } from '../../store/garageSlice';
 import { RANDOM_CARS_COUNT } from '../../types';
+import './RaceControlPanel.css';
 
 const RaceControlPanel: React.FC = () => {
   const dispatch = useAppDispatch();

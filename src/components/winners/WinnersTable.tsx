@@ -2,6 +2,7 @@ import React from 'react';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import { setSortField, setSortOrder } from '../../store/winnersSlice';
 import type { WinnerWithCar, SortField, SortOrder } from '../../types';
+import './WinnersTable.css';
 
 interface WinnersTableProps {
   winners: WinnerWithCar[];

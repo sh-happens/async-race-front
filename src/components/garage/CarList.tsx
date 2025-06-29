@@ -1,5 +1,6 @@
 import React from 'react';
 import type { Car } from '../../types';
+import './CarList.css';
 import CarItem from './CarItem';
 
 interface CarListProps {
