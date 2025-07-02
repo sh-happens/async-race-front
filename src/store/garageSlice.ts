@@ -1,4 +1,3 @@
-// src/store/garageSlice.ts
 import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import type { Car, LoadingState } from '../types';
@@ -8,7 +7,7 @@ import {
   updateCarThunk,
   deleteCarThunk,
   createRandomCarsThunk,
-  generateRandomCarsThunk, // Add this import
+  generateRandomCarsThunk,
   startEngineThunk,
   stopEngineThunk,
 } from './garageThunks';
@@ -18,7 +17,7 @@ interface GarageState extends LoadingState {
   currentPage: number;
   totalCount: number;
   selectedCar: Car | null;
-  racingCars: Set<number>;
+  racingCars: number[];
   engineData: Record<number, { velocity: number; distance: number }>;
 }
 
@@ -27,7 +26,7 @@ const initialState: GarageState = {
   currentPage: 1,
   totalCount: 0,
   selectedCar: null,
-  racingCars: new Set(),
+  racingCars: [],
   engineData: {},
   isLoading: false,
   error: null,
@@ -50,13 +49,15 @@ const garageSlice = createSlice({
       state.error = null;
     },
     addRacingCar: (state, action: PayloadAction<number>) => {
-      state.racingCars.add(action.payload);
+      if (!state.racingCars.includes(action.payload)) {
+        state.racingCars.push(action.payload);
+      }
     },
     removeRacingCar: (state, action: PayloadAction<number>) => {
-      state.racingCars.delete(action.payload);
+      state.racingCars = state.racingCars.filter((id) => id !== action.payload);
     },
     clearRacingCars: (state) => {
-      state.racingCars.clear();
+      state.racingCars = [];
     },
   },
   extraReducers: (builder) => {
@@ -124,7 +125,6 @@ const garageSlice = createSlice({
         state.error = action.error.message || 'Failed to create random cars';
       });
 
-    // Add handler for generateRandomCarsThunk
     builder
       .addCase(generateRandomCarsThunk.pending, (state) => {
         state.isLoading = true;
@@ -142,12 +142,14 @@ const garageSlice = createSlice({
       .addCase(startEngineThunk.fulfilled, (state, action) => {
         const { carId, velocity, distance } = action.payload;
         state.engineData[carId] = { velocity, distance };
-        state.racingCars.add(carId);
+        if (!state.racingCars.includes(carId)) {
+          state.racingCars.push(carId);
+        }
       })
       .addCase(stopEngineThunk.fulfilled, (state, action) => {
         const carId = action.payload;
         delete state.engineData[carId];
-        state.racingCars.delete(carId);
+        state.racingCars = state.racingCars.filter((id) => id !== carId);
       });
   },
 });

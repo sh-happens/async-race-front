@@ -80,3 +80,21 @@
     font-size: 14px;
   }
 }
+
+.winner-banner {
+  margin-top: 16px;
+  padding: 12px 20px;
+  background: linear-gradient(135deg, #28a745, #20c997);
+  color: white;
+  border-radius: 8px;
+  font-size: 18px;
+  font-weight: bold;
+  text-align: center;
+  box-shadow: 0 4px 8px rgba(40, 167, 69, 0.3);
+  animation: winnerPulse 2s ease-in-out infinite;
+}
+
+@keyframes winnerPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.02); }
+}
