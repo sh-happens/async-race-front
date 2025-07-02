@@ -1,9 +1,8 @@
 import React from 'react';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
-import { generateRandomCarsThunk, startEngineThunk, stopEngineThunk, driveCarThunk } from '../../store/garageThunks';
+import { generateRandomCarsThunk, startEngineThunk } from '../../store/garageThunks';
 import { setRaceInProgress, setRaceWinner } from '../../store/uiSlice';
-import { clearRacingCars, addRacingCar, removeRacingCar } from '../../store/garageSlice';
-import { saveWinnerThunk } from '../../store/winnersThunks';
+import { clearRacingCars, addRacingCar } from '../../store/garageSlice';
 import { RANDOM_CARS_COUNT } from '../../types';
 import './RaceControlPanel.css';
 
@@ -21,86 +20,20 @@ const RaceControlPanel: React.FC = () => {
     dispatch(setRaceInProgress(true));
     dispatch(setRaceWinner(null));
 
-    const racePromises = cars.map(async (car) => {
+    cars.forEach(async (car) => {
       try {
         const engineResult = await dispatch(startEngineThunk(car.id)).unwrap();
         dispatch(addRacingCar(car.id));
-
-        const driveResult = await dispatch(driveCarThunk(car.id)).unwrap();
-
-        if (driveResult.success) {
-          const raceTime = engineResult.distance / engineResult.velocity;
-
-          return {
-            carId: car.id,
-            carName: car.name,
-            time: raceTime,
-            success: true
-          } as const;
-        } else {
-          dispatch(removeRacingCar(car.id));
-          return {
-            carId: car.id,
-            carName: car.name,
-            time: Infinity,
-            success: false
-          } as const;
-        }
+        console.log(`Car ${car.id} engine started:`, engineResult);
       } catch (error) {
         console.error(`Failed to start car ${car.id}:`, error);
-        dispatch(removeRacingCar(car.id));
-        return {
-          carId: car.id,
-          carName: car.name,
-          time: Infinity,
-          success: false
-        } as const;
       }
     });
-
-    try {
-      const results = await Promise.allSettled(racePromises);
-
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      let winner: any = null;
-      let bestTime = Infinity;
-
-      results.forEach((result) => {
-        if (result.status === 'fulfilled' && result.value.success && result.value.time < bestTime) {
-          bestTime = result.value.time;
-          winner = result.value;
-        }
-      });
-
-      if (winner) {
-        dispatch(setRaceWinner(winner.carName));
-        dispatch(saveWinnerThunk({ carId: winner.carId, time: winner.time }));
-
-        setTimeout(() => {
-          alert(`${winner.carName} wins with time ${winner.time.toFixed(2)}s!`);
-        }, 500);
-      } else {
-        alert('No cars finished the race!');
-      }
-
-    } catch (error) {
-      console.error('Race error:', error);
-    }
   };
 
   const handleRaceReset = async () => {
     dispatch(setRaceInProgress(false));
     dispatch(setRaceWinner(null));
-
-    const stopPromises = cars.map(async (car) => {
-      try {
-        await dispatch(stopEngineThunk(car.id)).unwrap();
-      } catch (error) {
-        console.warn(`Failed to stop car ${car.id}:`, error);
-      }
-    });
-
-    await Promise.allSettled(stopPromises);
     dispatch(clearRacingCars());
   };
 
@@ -126,7 +59,7 @@ const RaceControlPanel: React.FC = () => {
           </button>
           <button
             onClick={handleRaceReset}
-            disabled={!raceInProgress}
+            disabled={!raceInProgress && !raceWinner}
             className="control-button race-reset"
             title="Reset all cars to starting position"
           >

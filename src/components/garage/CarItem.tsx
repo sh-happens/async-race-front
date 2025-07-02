@@ -7,6 +7,7 @@ import { saveWinnerThunk } from '../../store/winnersThunks';
 import type { Car } from '../../types';
 import './CarItem.css';
 
+let globalWinnerDeclared = false;
 interface CarItemProps {
   car: Car;
 }
@@ -20,64 +21,132 @@ const CarItem: React.FC<CarItemProps> = ({ car }) => {
   const [isAnimating, setIsAnimating] = useState(false);
   const [raceTime, setRaceTime] = useState(0);
   const carRef = useRef<HTMLDivElement>(null);
-  const raceStartTime = useRef<number>(0);
   const animationRef = useRef<number>(0);
 
   const isRacing = racingCars.includes(car.id);
   const carEngineData = engineData[car.id];
 
   useEffect(() => {
-    if (!raceInProgress && !isRacing) {
+    if (!raceInProgress) {
+      console.log(`Resetting car ${car.id} position - race was reset`);
       setCarPosition(0);
       setIsAnimating(false);
       setRaceTime(0);
       if (animationRef.current) {
         cancelAnimationFrame(animationRef.current);
+        animationRef.current = 0;
+      }
+    } else if (!isRacing && carPosition > 0) {
+      console.log(`Car ${car.id} stopped individually - keeping position`);
+      setIsAnimating(false);
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
+        animationRef.current = 0;
       }
     }
-  }, [raceInProgress, isRacing]);
+  }, [raceInProgress, isRacing, car.id, carPosition]);
 
-  const startCarAnimation = useCallback((velocity: number, distance: number) => {
+  useEffect(() => {
+    if (raceInProgress && !raceWinner) {
+      globalWinnerDeclared = false;
+    }
+  }, [raceInProgress, raceWinner]);
+
+  useEffect(() => {
+    if (isRacing && carEngineData && !isAnimating && raceInProgress) {
+      console.log(`Starting drive for car ${car.id}`);
+      handleDriveStart();
+    }
+  }, [isRacing, carEngineData, isAnimating, raceInProgress]);
+
+  const handleDriveStart = async () => {
+    if (!carEngineData) return;
+
+    try {
+      console.log(`Sending drive command for car ${car.id}`);
+      const driveResult = await dispatch(driveCarThunk(car.id)).unwrap();
+
+      if (driveResult.success) {
+        console.log(`Drive successful for car ${car.id}, starting animation`);
+        startCarAnimation(carEngineData.velocity, carEngineData.distance, false);
+      } else {
+        console.log(`Drive failed for car ${car.id}`);
+        dispatch(removeRacingCar(car.id));
+      }
+    } catch (error) {
+      console.log(`Drive command failed for car ${car.id} - car will break down:`, error);
+      startCarAnimation(carEngineData.velocity, carEngineData.distance, true);
+    }
+  };
+
+  const startCarAnimation = useCallback((velocity: number, distance: number, willBreakDown = false) => {
     if (!carRef.current) return;
 
-    setIsAnimating(true);
-    raceStartTime.current = Date.now();
+    const actualRaceTime = distance / velocity;
 
-    const animationDuration = (distance / velocity) * 1000;
+    const animationDuration = Math.min(Math.max(actualRaceTime * 100, 3000), 10000);
+
+    const breakDownTime = willBreakDown ? Math.random() * animationDuration * 0.8 + animationDuration * 0.2 : Infinity;
+
+    console.log(`Car ${car.id} starting race:`, {
+      velocity,
+      distance,
+      actualRaceTime: actualRaceTime.toFixed(2) + 's',
+      animationDuration: (animationDuration / 1000).toFixed(2) + 's',
+      willBreakDown,
+      breakDownAt: willBreakDown ? (breakDownTime / 1000).toFixed(2) + 's' : 'never'
+    });
+
+    setIsAnimating(true);
     const startTime = Date.now();
 
     const animate = () => {
+      if (!raceInProgress) {
+        console.log(`Animation stopped for car ${car.id} - race ended manually`);
+        setIsAnimating(false);
+        dispatch(removeRacingCar(car.id));
+        return;
+      }
+
       const elapsed = Date.now() - startTime;
+
+      if (willBreakDown && elapsed >= breakDownTime) {
+        console.log(`Car ${car.id} broke down at ${elapsed / 1000}s (${((elapsed / animationDuration) * 100).toFixed(1)}% progress)`);
+        setIsAnimating(false);
+        dispatch(removeRacingCar(car.id));
+        return;
+      }
+
       const progress = Math.min(elapsed / animationDuration, 1);
 
       setCarPosition(progress * 100);
-      setRaceTime(elapsed / 1000);
+      setRaceTime((elapsed / animationDuration) * actualRaceTime);
 
       if (progress < 1) {
         animationRef.current = requestAnimationFrame(animate);
-      } else if (progress >= 1) {
+      } else {
+        console.log(`Car ${car.id} finished! Actual race time: ${actualRaceTime.toFixed(2)}s - staying at finish line`);
         setIsAnimating(false);
+        setCarPosition(100);
         dispatch(removeRacingCar(car.id));
 
-        if (!raceWinner) {
+        if (!globalWinnerDeclared && !raceWinner) {
+          globalWinnerDeclared = true;
+          console.log(`Car ${car.id} is the first to finish - declaring winner!`);
           dispatch(setRaceWinner(car.name));
-          dispatch(saveWinnerThunk({ carId: car.id, time: elapsed / 1000 }));
+          dispatch(saveWinnerThunk({ carId: car.id, time: actualRaceTime }));
 
           setTimeout(() => {
-            alert(`🏆 ${car.name} wins with time ${(elapsed / 1000).toFixed(2)}s!`);
+            alert(`🏆 ${car.name} wins with time ${actualRaceTime.toFixed(2)}s!`);
           }, 100);
+        } else {
+          console.log(`Car ${car.id} finished, but winner already declared (global: ${globalWinnerDeclared}, redux: ${raceWinner})`);
         }
       }
     };
 
     animationRef.current = requestAnimationFrame(animate);
-  }, [dispatch, car.id, car.name, raceWinner]);
-
-  useEffect(() => {
-    if (isRacing && carEngineData && !isAnimating) {
-      startCarAnimation(carEngineData.velocity, carEngineData.distance);
-    }
-  }, [isRacing, carEngineData, isAnimating, startCarAnimation]);
+  }, [raceInProgress, dispatch, car.id, car.name, raceWinner]);
 
   const handleSelect = () => {
     if (!raceInProgress) {
@@ -99,18 +168,11 @@ const CarItem: React.FC<CarItemProps> = ({ car }) => {
   const handleStartEngine = async () => {
     if (!isRacing && !raceInProgress) {
       try {
+        console.log(`Starting individual engine for car ${car.id}`);
         const result = await dispatch(startEngineThunk(car.id)).unwrap();
+        console.log(`Individual engine start result for car ${car.id}:`, result);
 
-        const driveResult = await dispatch(driveCarThunk(car.id)).unwrap();
-
-        if (driveResult.success) {
-          startCarAnimation(result.velocity, result.distance);
-        } else {
-          setTimeout(() => {
-            setIsAnimating(false);
-            dispatch(removeRacingCar(car.id));
-          }, Math.random() * 2000 + 1000);
-        }
+        handleDriveStart();
       } catch (error) {
         console.error('Failed to start engine:', error);
         dispatch(removeRacingCar(car.id));
@@ -120,14 +182,21 @@ const CarItem: React.FC<CarItemProps> = ({ car }) => {
 
   const handleStopEngine = () => {
     if (isRacing) {
+      console.log(`Stopping engine for car ${car.id} - resetting to start`);
       setIsAnimating(false);
       setCarPosition(0);
       setRaceTime(0);
       if (animationRef.current) {
         cancelAnimationFrame(animationRef.current);
+        animationRef.current = 0;
       }
       dispatch(stopEngineThunk(car.id));
     }
+  };
+
+  const getTrackWidth = () => {
+    if (!carRef.current?.parentElement) return 300;
+    return carRef.current.parentElement.offsetWidth - 120;
   };
 
   return (
@@ -162,7 +231,13 @@ const CarItem: React.FC<CarItemProps> = ({ car }) => {
         </div>
         {isRacing && (
           <div className="race-info">
-            <span className="race-time">Time: {raceTime.toFixed(2)}s</span>
+            <div>Time: {raceTime.toFixed(2)}s</div>
+            <div>Progress: {carPosition.toFixed(1)}%</div>
+            {carEngineData && (
+              <div style={{ fontSize: '10px', color: '#666' }}>
+                Speed: {carEngineData.velocity} | Distance: {carEngineData.distance}
+              </div>
+            )}
           </div>
         )}
       </div>
@@ -175,7 +250,7 @@ const CarItem: React.FC<CarItemProps> = ({ car }) => {
             className={`racing-car ${isAnimating ? 'racing' : ''}`}
             style={{
               backgroundColor: car.color,
-              transform: `translateX(${carPosition * 3}px)`
+              transform: `translateX(${(carPosition / 100) * getTrackWidth()}px) translateY(-50%)`
             }}
           />
           <div className="finish-line">FINISH</div>
