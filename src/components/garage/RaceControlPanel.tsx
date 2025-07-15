@@ -2,13 +2,13 @@ import React from 'react';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import { generateRandomCarsThunk, startEngineThunk } from '../../store/garageThunks';
 import { setRaceInProgress, setRaceWinner } from '../../store/uiSlice';
-import { clearRacingCars, addRacingCar } from '../../store/garageSlice';
+import { clearRacingCars, clearAllRaceStates } from '../../store/garageSlice';
 import { RANDOM_CARS_COUNT } from '../../types';
 import './RaceControlPanel.css';
 
 const RaceControlPanel: React.FC = () => {
   const dispatch = useAppDispatch();
-  const { isLoading, cars } = useAppSelector((state) => state.garage);
+  const { isLoading, cars, carRaceStates } = useAppSelector((state) => state.garage);
   const { raceInProgress, raceWinner } = useAppSelector((state) => state.ui);
 
   const handleRaceStart = async () => {
@@ -17,24 +17,39 @@ const RaceControlPanel: React.FC = () => {
       return;
     }
 
+    console.log('Starting race for all cars on page');
     dispatch(setRaceInProgress(true));
     dispatch(setRaceWinner(null));
+    dispatch(clearAllRaceStates());
 
-    cars.forEach(async (car) => {
+    const startPromises = cars.map(async (car) => {
       try {
         const engineResult = await dispatch(startEngineThunk(car.id)).unwrap();
-        dispatch(addRacingCar(car.id));
-        console.log(`Car ${car.id} engine started:`, engineResult);
+        console.log(`Car ${car.id} engine started for race:`, engineResult);
+        return { carId: car.id, success: true };
       } catch (error) {
-        console.error(`Failed to start car ${car.id}:`, error);
+        console.error(`Failed to start car ${car.id} for race:`, error);
+        return { carId: car.id, success: false };
       }
     });
+
+    const results = await Promise.all(startPromises);
+    const successfulStarts = results.filter(r => r.success);
+
+    console.log(`Race started: ${successfulStarts.length}/${cars.length} cars ready`);
+
+    if (successfulStarts.length === 0) {
+      alert('Failed to start any cars for the race!');
+      dispatch(setRaceInProgress(false));
+    }
   };
 
-  const handleRaceReset = async () => {
+  const handleRaceReset = () => {
+    console.log('Resetting race - all cars return to start');
     dispatch(setRaceInProgress(false));
     dispatch(setRaceWinner(null));
     dispatch(clearRacingCars());
+    dispatch(clearAllRaceStates());
   };
 
   const handleGenerateRandomCars = () => {
@@ -42,6 +57,17 @@ const RaceControlPanel: React.FC = () => {
       dispatch(generateRandomCarsThunk(RANDOM_CARS_COUNT));
     }
   };
+
+  const getRaceStats = () => {
+    const raceStates = Object.values(carRaceStates);
+    const racingCount = raceStates.filter(state => state.isAnimating).length;
+    const finishedCount = raceStates.filter(state => state.isFinished).length;
+    const totalCars = cars.length;
+
+    return { racingCount, finishedCount, totalCars };
+  };
+
+  const { racingCount, finishedCount, totalCars } = getRaceStats();
 
   return (
     <div className="race-control-panel">
@@ -59,7 +85,7 @@ const RaceControlPanel: React.FC = () => {
           </button>
           <button
             onClick={handleRaceReset}
-            disabled={!raceInProgress && !raceWinner}
+            disabled={!raceInProgress && !raceWinner && finishedCount === 0}
             className="control-button race-reset"
             title="Reset all cars to starting position"
           >
@@ -78,6 +104,15 @@ const RaceControlPanel: React.FC = () => {
           </button>
         </div>
       </div>
+
+      {raceInProgress && (
+        <div className="race-status">
+          <div className="status-info">
+            🏃 Racing: {racingCount}/{totalCars} cars
+            {finishedCount > 0 && ` • ✅ Finished: ${finishedCount}`}
+          </div>
+        </div>
+      )}
 
       {raceWinner && (
         <div className="winner-banner">
