@@ -91,16 +91,16 @@
   .winners-table-container {
     overflow-x: auto;
   }
-  
+
   .winners-table {
     min-width: 500px;
   }
-  
+
   .winners-table th,
   .winners-table td {
     padding: 8px 6px;
   }
-  
+
   .col-name {
     min-width: 150px;
   }

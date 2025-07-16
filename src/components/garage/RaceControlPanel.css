@@ -96,11 +96,11 @@
   .race-control-panel {
     padding: 12px;
   }
-  
+
   .control-buttons {
     gap: 10px;
   }
-  
+
   .control-button.race-start,
   .control-button.race-reset,
   .control-button.generate-cars {
@@ -126,11 +126,12 @@
 }
 
 @keyframes winnerPulse {
-  0%, 100% { 
+  0%,
+  100% {
     transform: scale(1);
     opacity: 1;
   }
-  50% { 
+  50% {
     transform: scale(1.02);
     opacity: 0.95;
   }

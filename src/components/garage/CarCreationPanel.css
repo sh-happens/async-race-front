@@ -111,9 +111,9 @@
   }
 
   .car-name-input {
-    font-size: 16px; 
+    font-size: 16px;
     padding: 12px;
-    min-height: 48px; 
+    min-height: 48px;
     box-sizing: border-box;
   }
 
@@ -130,7 +130,7 @@
   .form-actions {
     gap: 8px;
   }
-  
+
   .form-actions button {
     min-height: 48px;
     font-size: 16px;
@@ -141,30 +141,30 @@
   .car-creation-panel {
     padding: 12px;
   }
-  
+
   .car-form {
     gap: 16px;
   }
-  
+
   .form-row {
     gap: 12px;
   }
-  
+
   .car-name-input {
     padding: 10px;
     min-height: 44px;
   }
-  
+
   .color-picker {
     width: 44px;
     height: 44px;
   }
-  
+
   .color-value {
     font-size: 12px;
     padding: 6px 8px;
   }
-  
+
   .form-actions button {
     min-height: 44px;
     font-size: 14px;

@@ -13,12 +13,14 @@ interface CarItemProps {
 }
 
 const CarItem: React.FC<CarItemProps> = ({ car }) => {
-  const { carRaceStates } = useAppSelector(state => state.garage);
+  const { carRaceStates } = useAppSelector((state) => state.garage);
   const carRef = useRef<HTMLDivElement>(null);
 
-  const { modalState, closeModal, showError, showConfirm, showSuccess } = useModal();
+  const { modalState, closeModal, showError, showConfirm, showSuccess } =
+    useModal();
 
-  const { startCarAnimation, stopAnimation, driveInProgressRef } = useCarRaceAnimation(car.id);
+  const { startCarAnimation, stopAnimation, driveInProgressRef } =
+    useCarRaceAnimation(car.id);
 
   const {
     handleSelect,
@@ -27,10 +29,12 @@ const CarItem: React.FC<CarItemProps> = ({ car }) => {
     handleStopEngine,
     isRacing,
     isLoading,
-    raceInProgress
+    raceInProgress,
   } = useCarControls(car, { showError, showConfirm });
 
-  useCarRaceEffects(car, startCarAnimation, stopAnimation, driveInProgressRef, { showSuccess });
+  useCarRaceEffects(car, startCarAnimation, stopAnimation, driveInProgressRef, {
+    showSuccess,
+  });
 
   React.useEffect(() => {
     return stopAnimation;
@@ -102,7 +106,8 @@ const CarItem: React.FC<CarItemProps> = ({ car }) => {
               <div>Time: {carRaceState.raceTime.toFixed(2)}s</div>
               <div>Progress: {carRaceState.position.toFixed(1)}%</div>
               <div style={{ fontSize: '10px', color: '#666' }}>
-                Speed: {carRaceState.velocity} | Distance: {carRaceState.distance}
+                Speed: {carRaceState.velocity} | Distance:{' '}
+                {carRaceState.distance}
               </div>
             </div>
           )}
@@ -116,7 +121,7 @@ const CarItem: React.FC<CarItemProps> = ({ car }) => {
               className={`racing-car ${carRaceState?.isAnimating ? 'racing' : ''}`}
               style={{
                 backgroundColor: car.color,
-                transform: `translateX(${((carRaceState?.position || 0) / 100) * getTrackWidth()}px) translateY(-50%)`
+                transform: `translateX(${((carRaceState?.position || 0) / 100) * getTrackWidth()}px) translateY(-50%)`,
               }}
             />
             <div className="finish-line">FINISH</div>
@@ -157,4 +162,4 @@ const CarItem: React.FC<CarItemProps> = ({ car }) => {
   );
 };
 
-export default CarItem
+export default CarItem;

@@ -20,9 +20,8 @@ const Modal: React.FC<ModalProps> = ({
   message,
   type = 'info',
   confirmText = 'OK',
-  cancelText = 'Cancel'
+  cancelText = 'Cancel',
 }) => {
-  // Close modal on Escape key
   useEffect(() => {
     const handleEscape = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
@@ -32,7 +31,6 @@ const Modal: React.FC<ModalProps> = ({
 
     if (isOpen) {
       document.addEventListener('keydown', handleEscape);
-      // Prevent body scroll when modal is open
       document.body.style.overflow = 'hidden';
     }
 

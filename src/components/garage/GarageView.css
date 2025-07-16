@@ -33,7 +33,7 @@
   .garage-view {
     gap: 20px;
   }
-  
+
   .garage-controls {
     gap: 20px;
     padding: 20px;
@@ -68,7 +68,7 @@
   .car-count {
     font-size: 16px;
   }
-  
+
   .garage-header {
     padding-bottom: 12px;
   }
@@ -78,12 +78,12 @@
   .garage-view {
     gap: 12px;
   }
-  
+
   .garage-controls {
     padding: 12px;
     gap: 12px;
   }
-  
+
   .car-count {
     font-size: 14px;
   }

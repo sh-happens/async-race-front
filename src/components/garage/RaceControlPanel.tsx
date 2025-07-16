@@ -1,6 +1,9 @@
 import React from 'react';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
-import { generateRandomCarsThunk, startEngineThunk } from '../../store/garageThunks';
+import {
+  generateRandomCarsThunk,
+  startEngineThunk,
+} from '../../store/garageThunks';
 import { setRaceInProgress, setRaceWinner } from '../../store/uiSlice';
 import { clearRacingCars, clearAllRaceStates } from '../../store/garageSlice';
 import { useModal } from '../../hooks/useModal';
@@ -10,15 +13,19 @@ import './RaceControlPanel.css';
 
 const RaceControlPanel: React.FC = () => {
   const dispatch = useAppDispatch();
-  const { isLoading, cars, carRaceStates } = useAppSelector((state) => state.garage);
+  const { isLoading, cars, carRaceStates } = useAppSelector(
+    (state) => state.garage
+  );
   const { raceInProgress, raceWinner } = useAppSelector((state) => state.ui);
 
   const { modalState, closeModal, showError, showConfirm } = useModal();
 
-
   const handleRaceStart = async () => {
     if (cars.length === 0) {
-      showError('No Cars Available', 'No cars to race! Please create some cars first.');
+      showError(
+        'No Cars Available',
+        'No cars to race! Please create some cars first.'
+      );
       return;
     }
 
@@ -38,7 +45,7 @@ const RaceControlPanel: React.FC = () => {
     });
 
     const results = await Promise.all(startPromises);
-    const successfulStarts = results.filter(r => r.success);
+    const successfulStarts = results.filter((r) => r.success);
 
     if (successfulStarts.length === 0) {
       showError(
@@ -70,8 +77,8 @@ const RaceControlPanel: React.FC = () => {
 
   const getRaceStats = () => {
     const raceStates = Object.values(carRaceStates);
-    const racingCount = raceStates.filter(state => state.isAnimating).length;
-    const finishedCount = raceStates.filter(state => state.isFinished).length;
+    const racingCount = raceStates.filter((state) => state.isAnimating).length;
+    const finishedCount = raceStates.filter((state) => state.isFinished).length;
     const totalCars = cars.length;
 
     return { racingCount, finishedCount, totalCars };
@@ -125,11 +132,8 @@ const RaceControlPanel: React.FC = () => {
       )}
 
       {raceWinner && (
-        <div className="winner-banner">
-          🏆 Winner: {raceWinner}
-        </div>
+        <div className="winner-banner">🏆 Winner: {raceWinner}</div>
       )}
-
 
       <Modal
         isOpen={modalState.isOpen}

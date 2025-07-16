@@ -32,7 +32,6 @@ export const useModal = () => {
     }));
   };
 
-  // Convenience methods for different modal types
   const showInfo = (title: string, message: string, confirmText = 'OK') => {
     showModal({ title, message, type: 'info', confirmText });
   };

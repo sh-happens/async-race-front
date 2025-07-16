@@ -11,13 +11,9 @@ import CarList from './CarList';
 
 const GarageView: React.FC = () => {
   const dispatch = useAppDispatch();
-  const {
-    cars,
-    isLoading,
-    error,
-    totalCount,
-    currentPage
-  } = useAppSelector((state) => state.garage);
+  const { cars, isLoading, error, totalCount, currentPage } = useAppSelector(
+    (state) => state.garage
+  );
 
   const totalPages = Math.ceil(totalCount / CARS_PER_PAGE);
 
@@ -41,11 +37,7 @@ const GarageView: React.FC = () => {
         <RaceControlPanel />
       </div>
 
-      {error && (
-        <div className="error-message">
-          Error: {error}
-        </div>
-      )}
+      {error && <div className="error-message">Error: {error}</div>}
 
       {isLoading ? (
         <div className="loading">Loading cars...</div>

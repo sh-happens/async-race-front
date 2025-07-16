@@ -29,8 +29,9 @@ const Header: React.FC = () => {
         <h1 className="header-title">🏎️ Async Race</h1>
         <nav className="header-nav">
           <button
-            className={`nav-button ${currentView === 'garage' ? 'active' : ''} ${isNavigationDisabled ? 'disabled' : ''
-              }`}
+            className={`nav-button ${currentView === 'garage' ? 'active' : ''} ${
+              isNavigationDisabled ? 'disabled' : ''
+            }`}
             onClick={() => handleViewChange('garage')}
             disabled={isNavigationDisabled}
             title={
@@ -42,8 +43,9 @@ const Header: React.FC = () => {
             Garage
           </button>
           <button
-            className={`nav-button ${currentView === 'winners' ? 'active' : ''} ${isNavigationDisabled ? 'disabled' : ''
-              }`}
+            className={`nav-button ${currentView === 'winners' ? 'active' : ''} ${
+              isNavigationDisabled ? 'disabled' : ''
+            }`}
             onClick={() => handleViewChange('winners')}
             disabled={isNavigationDisabled}
             title={

@@ -26,7 +26,10 @@ const CarCreationPanel: React.FC = () => {
     e.preventDefault();
 
     if (!carName.trim()) {
-      showError('Validation Error', 'Please enter a car name before creating or updating the car.');
+      showError(
+        'Validation Error',
+        'Please enter a car name before creating or updating the car.'
+      );
       return;
     }
 
@@ -37,7 +40,9 @@ const CarCreationPanel: React.FC = () => {
 
     try {
       if (selectedCar) {
-        await dispatch(updateCarThunk({ id: selectedCar.id, carData })).unwrap();
+        await dispatch(
+          updateCarThunk({ id: selectedCar.id, carData })
+        ).unwrap();
         showSuccess('Car Updated', `Successfully updated "${carName}"!`);
       } else {
         await dispatch(createCarThunk(carData)).unwrap();
@@ -105,7 +110,7 @@ const CarCreationPanel: React.FC = () => {
               disabled={isLoading}
               className="submit-button primary"
             >
-              {isLoading ? 'Saving...' : (selectedCar ? 'Update' : 'Create')}
+              {isLoading ? 'Saving...' : selectedCar ? 'Update' : 'Create'}
             </button>
 
             {selectedCar && (

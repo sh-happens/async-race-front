@@ -5,9 +5,9 @@
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  font-family:
+    -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu',
+    'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background-color: #f5f5f5;
@@ -29,7 +29,11 @@ body {
   width: 100%;
 }
 
-.control-button, .submit-button, .nav-button, .pagination-button, .page-number {
+.control-button,
+.submit-button,
+.nav-button,
+.pagination-button,
+.page-number {
   padding: 8px 16px;
   border: 1px solid #ddd;
   border-radius: 4px;
@@ -46,38 +50,47 @@ body {
   justify-content: center;
 }
 
-.control-button:hover, .submit-button:hover, .nav-button:hover, 
-.pagination-button:hover, .page-number:hover {
+.control-button:hover,
+.submit-button:hover,
+.nav-button:hover,
+.pagination-button:hover,
+.page-number:hover {
   background-color: #f8f9fa;
   border-color: #007bff;
   transform: translateY(-1px);
 }
 
-.control-button:disabled, .submit-button:disabled, .pagination-button:disabled {
+.control-button:disabled,
+.submit-button:disabled,
+.pagination-button:disabled {
   opacity: 0.5;
   cursor: not-allowed;
   background-color: #f8f9fa;
   transform: none;
 }
 
-.control-button.primary, .submit-button.primary {
+.control-button.primary,
+.submit-button.primary {
   background-color: #007bff;
   color: white;
   border-color: #007bff;
 }
 
-.control-button.primary:hover, .submit-button.primary:hover {
+.control-button.primary:hover,
+.submit-button.primary:hover {
   background-color: #0056b3;
   border-color: #0056b3;
 }
 
-.control-button.secondary, .submit-button.secondary {
+.control-button.secondary,
+.submit-button.secondary {
   background-color: #6c757d;
   color: white;
   border-color: #6c757d;
 }
 
-.control-button.secondary:hover, .submit-button.secondary:hover {
+.control-button.secondary:hover,
+.submit-button.secondary:hover {
   background-color: #5a6268;
   border-color: #545b62;
 }
@@ -93,24 +106,28 @@ body {
   border-color: #bd2130;
 }
 
-.control-button.start, .control-button.race-start {
+.control-button.start,
+.control-button.race-start {
   background-color: #28a745;
   color: white;
   border-color: #28a745;
 }
 
-.control-button.start:hover, .control-button.race-start:hover {
+.control-button.start:hover,
+.control-button.race-start:hover {
   background-color: #218838;
   border-color: #1e7e34;
 }
 
-.control-button.stop, .control-button.race-reset {
+.control-button.stop,
+.control-button.race-reset {
   background-color: #ffc107;
   color: #212529;
   border-color: #ffc107;
 }
 
-.control-button.stop:hover, .control-button.race-reset:hover {
+.control-button.stop:hover,
+.control-button.race-reset:hover {
   background-color: #e0a800;
   border-color: #d39e00;
 }
@@ -188,7 +205,8 @@ body {
   font-weight: 600;
 }
 
-input[type="text"], input[type="color"] {
+input[type='text'],
+input[type='color'] {
   padding: 8px 12px;
   border: 1px solid #ddd;
   border-radius: 4px;
@@ -196,7 +214,8 @@ input[type="text"], input[type="color"] {
   transition: border-color 0.2s ease;
 }
 
-input[type="text"]:focus, input[type="color"]:focus {
+input[type='text']:focus,
+input[type='color']:focus {
   outline: none;
   border-color: #007bff;
   box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
@@ -206,8 +225,9 @@ input[type="text"]:focus, input[type="color"]:focus {
   .app-main {
     padding: 15px;
   }
-  
-  .control-button, .submit-button {
+
+  .control-button,
+  .submit-button {
     padding: 10px 16px;
     font-size: 16px;
     min-height: 44px;
@@ -227,7 +247,8 @@ input[type="text"]:focus, input[type="color"]:focus {
     font-size: 24px;
   }
 
-  .control-button, .submit-button {
+  .control-button,
+  .submit-button {
     padding: 12px 16px;
     font-size: 16px;
     min-height: 48px;

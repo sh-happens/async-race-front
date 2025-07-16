@@ -22,11 +22,13 @@ const WinnersView: React.FC = () => {
   const totalPages = Math.ceil(totalCount / WINNERS_PER_PAGE);
 
   useEffect(() => {
-    dispatch(fetchWinners({
-      page: currentPage,
-      sort: sortField,
-      order: sortOrder,
-    }));
+    dispatch(
+      fetchWinners({
+        page: currentPage,
+        sort: sortField,
+        order: sortOrder,
+      })
+    );
   }, [dispatch, currentPage, sortField, sortOrder]);
 
   const handlePageChange = (page: number) => {
@@ -40,11 +42,7 @@ const WinnersView: React.FC = () => {
         <p className="winners-count">Total winners: {totalCount}</p>
       </div>
 
-      {error && (
-        <div className="error-message">
-          Error: {error}
-        </div>
-      )}
+      {error && <div className="error-message">Error: {error}</div>}
 
       {isLoading ? (
         <div className="loading">Loading winners...</div>
