@@ -3,6 +3,8 @@ import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import { generateRandomCarsThunk, startEngineThunk } from '../../store/garageThunks';
 import { setRaceInProgress, setRaceWinner } from '../../store/uiSlice';
 import { clearRacingCars, clearAllRaceStates } from '../../store/garageSlice';
+import { useModal } from '../../hooks/useModal';
+import Modal from '../common/Modal';
 import { RANDOM_CARS_COUNT } from '../../types';
 import './RaceControlPanel.css';
 
@@ -11,13 +13,15 @@ const RaceControlPanel: React.FC = () => {
   const { isLoading, cars, carRaceStates } = useAppSelector((state) => state.garage);
   const { raceInProgress, raceWinner } = useAppSelector((state) => state.ui);
 
+  const { modalState, closeModal, showError, showConfirm } = useModal();
+
+
   const handleRaceStart = async () => {
     if (cars.length === 0) {
-      alert('No cars to race!');
+      showError('No Cars Available', 'No cars to race! Please create some cars first.');
       return;
     }
 
-    console.log('Starting race for all cars on page');
     dispatch(setRaceInProgress(true));
     dispatch(setRaceWinner(null));
     dispatch(clearAllRaceStates());
@@ -36,16 +40,16 @@ const RaceControlPanel: React.FC = () => {
     const results = await Promise.all(startPromises);
     const successfulStarts = results.filter(r => r.success);
 
-    console.log(`Race started: ${successfulStarts.length}/${cars.length} cars ready`);
-
     if (successfulStarts.length === 0) {
-      alert('Failed to start any cars for the race!');
+      showError(
+        'Race Failed',
+        'Failed to start any cars for the race! Please check your connection and try again.'
+      );
       dispatch(setRaceInProgress(false));
     }
   };
 
   const handleRaceReset = () => {
-    console.log('Resetting race - all cars return to start');
     dispatch(setRaceInProgress(false));
     dispatch(setRaceWinner(null));
     dispatch(clearRacingCars());
@@ -53,9 +57,15 @@ const RaceControlPanel: React.FC = () => {
   };
 
   const handleGenerateRandomCars = () => {
-    if (window.confirm(`Generate ${RANDOM_CARS_COUNT} random cars?`)) {
-      dispatch(generateRandomCarsThunk(RANDOM_CARS_COUNT));
-    }
+    showConfirm(
+      'Generate Random Cars',
+      `Are you sure you want to generate ${RANDOM_CARS_COUNT} random cars? This will add them to your garage.`,
+      () => {
+        dispatch(generateRandomCarsThunk(RANDOM_CARS_COUNT));
+      },
+      'Generate',
+      'Cancel'
+    );
   };
 
   const getRaceStats = () => {
@@ -119,6 +129,18 @@ const RaceControlPanel: React.FC = () => {
           🏆 Winner: {raceWinner}
         </div>
       )}
+
+
+      <Modal
+        isOpen={modalState.isOpen}
+        onClose={closeModal}
+        onConfirm={modalState.onConfirm}
+        title={modalState.title}
+        message={modalState.message}
+        type={modalState.type}
+        confirmText={modalState.confirmText}
+        cancelText={modalState.cancelText}
+      />
     </div>
   );
 };

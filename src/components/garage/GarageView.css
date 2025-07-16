@@ -29,6 +29,17 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
+@media (max-width: 1024px) {
+  .garage-view {
+    gap: 20px;
+  }
+  
+  .garage-controls {
+    gap: 20px;
+    padding: 20px;
+  }
+}
+
 @media (max-width: 768px) {
   .garage-header {
     flex-direction: column;
@@ -51,9 +62,29 @@
   .garage-controls {
     padding: 16px;
     gap: 16px;
+    border-radius: 8px;
   }
 
   .car-count {
     font-size: 16px;
+  }
+  
+  .garage-header {
+    padding-bottom: 12px;
+  }
+}
+
+@media (max-width: 320px) {
+  .garage-view {
+    gap: 12px;
+  }
+  
+  .garage-controls {
+    padding: 12px;
+    gap: 12px;
+  }
+  
+  .car-count {
+    font-size: 14px;
   }
 }

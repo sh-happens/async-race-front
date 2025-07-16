@@ -10,6 +10,10 @@ import { setRaceWinner } from '../store/uiSlice';
 import type { Car } from '../types';
 import { useAppDispatch, useAppSelector } from './redux';
 
+interface ModalFunctions {
+  showSuccess: (title: string, message: string) => void;
+}
+
 export const useCarRaceEffects = (
   car: Car,
   startCarAnimation: (
@@ -18,7 +22,8 @@ export const useCarRaceEffects = (
     willBreakDown?: boolean
   ) => void,
   stopAnimation: () => void,
-  driveInProgressRef: React.MutableRefObject<boolean>
+  driveInProgressRef: React.MutableRefObject<boolean>,
+  modalFunctions: ModalFunctions
 ) => {
   const dispatch = useAppDispatch();
   const { racingCars, carRaceStates, firstFinisher } = useAppSelector(
@@ -40,8 +45,9 @@ export const useCarRaceEffects = (
       dispatch(setRaceWinner(car.name));
 
       setTimeout(() => {
-        alert(
-          `🏆 ${car.name} wins with time ${carRaceState.raceTime.toFixed(2)}s!`
+        modalFunctions.showSuccess(
+          'Race Winner! 🏆',
+          `${car.name} wins with time ${carRaceState.raceTime.toFixed(2)}s!`
         );
       }, 100);
     }
@@ -54,6 +60,7 @@ export const useCarRaceEffects = (
     carRaceState?.isFinished,
     carRaceState?.raceTime,
     dispatch,
+    modalFunctions,
   ]);
 
   useEffect(() => {

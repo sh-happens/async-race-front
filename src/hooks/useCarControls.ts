@@ -7,7 +7,18 @@ import { setSelectedCar, removeRacingCar } from '../store/garageSlice';
 import type { Car } from '../types';
 import { useAppDispatch, useAppSelector } from './redux';
 
-export const useCarControls = (car: Car) => {
+interface ModalFunctions {
+  showError: (title: string, message: string) => void;
+  showConfirm: (
+    title: string,
+    message: string,
+    onConfirm: () => void,
+    confirmText?: string,
+    cancelText?: string
+  ) => void;
+}
+
+export const useCarControls = (car: Car, modalFunctions: ModalFunctions) => {
   const dispatch = useAppDispatch();
   const { isLoading, racingCars } = useAppSelector((state) => state.garage);
   const raceInProgress = useAppSelector((state) => state.ui.raceInProgress);
@@ -22,13 +33,22 @@ export const useCarControls = (car: Car) => {
 
   const handleDelete = () => {
     if (raceInProgress) {
-      alert('Cannot delete car during race');
+      modalFunctions.showError(
+        'Cannot Delete Car',
+        'Cannot delete car during race. Please stop or finish the race first.'
+      );
       return;
     }
 
-    if (window.confirm(`Are you sure you want to delete ${car.name}?`)) {
-      dispatch(deleteCarThunk(car.id));
-    }
+    modalFunctions.showConfirm(
+      'Delete Car',
+      `Are you sure you want to delete "${car.name}"? This action cannot be undone.`,
+      () => {
+        dispatch(deleteCarThunk(car.id));
+      },
+      'Delete',
+      'Cancel'
+    );
   };
 
   const handleStartEngine = async (
@@ -41,6 +61,10 @@ export const useCarControls = (car: Car) => {
         await dispatch(startEngineThunk(car.id)).unwrap();
       } catch (error) {
         console.error('Failed to start engine:', error);
+        modalFunctions.showError(
+          'Engine Start Failed',
+          `Failed to start the engine for "${car.name}". Please check your connection and try again.`
+        );
         dispatch(removeRacingCar(car.id));
         driveInProgressRef.current = false;
       }

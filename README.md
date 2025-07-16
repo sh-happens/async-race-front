@@ -138,51 +138,51 @@ src/
 
 ## Basic Structure (80 points)
 
-- [ ] **Two Views (10 points):** "Garage" and "Winners" views implemented
-- [ ] **Garage View Content (30 points):** Complete garage view with all required sections:
-  - [ ] Name of view
-  - [ ] Car creation and editing panel
-  - [ ] Race control panel
-  - [ ] Garage section
-- [ ] **Winners View Content (10 points):** Complete winners view with:
-  - [ ] Name of view ("Winners")
-  - [ ] Winners table
-  - [ ] Pagination
-- [ ] **Persistent State (30 points):** View state preserved when navigating between views
+- [x] **Two Views (10 points):** "Garage" and "Winners" views implemented
+- [x] **Garage View Content (30 points):** Complete garage view with all required sections:
+  - [x] Name of view
+  - [x] Car creation and editing panel
+  - [x] Race control panel
+  - [x] Garage section
+- [x] **Winners View Content (10 points):** Complete winners view with:
+  - [x] Name of view ("Winners")
+  - [x] Winners table
+  - [x] Pagination
+- [x] **Persistent State (30 points):** View state preserved when navigating between views
 
 ## Garage View (90 points)
 
-- [ ] **Car Creation And Editing Panel. CRUD Operations (20 points):** Full CRUD operations for cars with name and color attributes
-- [ ] **Color Selection (10 points):** RGB color picker with visual feedback
-- [ ] **Random Car Creation (20 points):** Generate 100 random cars with varied names and colors
-- [ ] **Car Management Buttons (10 points):** Update and delete buttons for each car
-- [ ] **Pagination (10 points):** Garage pagination (7 cars per page)
-- [ ] **EXTRA POINTS (20 points):**
-  - [ ] **Empty Garage:** User-friendly empty state handling
-  - [ ] **Empty Garage Page:** Auto-navigation when last car on page is deleted
+- [x] **Car Creation And Editing Panel. CRUD Operations (20 points):** Full CRUD operations for cars with name and color attributes
+- [x] **Color Selection (10 points):** RGB color picker with visual feedback
+- [x] **Random Car Creation (20 points):** Generate 100 random cars with varied names and colors
+- [x] **Car Management Buttons (10 points):** Update and delete buttons for each car
+- [x] **Pagination (10 points):** Garage pagination (7 cars per page)
+- [x] **EXTRA POINTS (20 points):**
+  - [x] **Empty Garage:** User-friendly empty state handling
+  - [x] **Empty Garage Page:** Auto-navigation when last car on page is deleted
 
 ## 🏆 Winners View (50 points)
 
-- [ ] **Display Winners (15 points):** Winners displayed in table after race completion
-- [ ] **Pagination for Winners (10 points):** Winners pagination (10 per page)
-- [ ] **Winners Table (15 points):** Complete table with car #, image, name, wins count, best time
-- [ ] **Sorting Functionality (10 points):** Sort by wins and time (ascending/descending)
+- [x] **Display Winners (15 points):** Winners displayed in table after race completion
+- [x] **Pagination for Winners (10 points):** Winners pagination (10 per page)
+- [x] **Winners Table (15 points):** Complete table with car #, image, name, wins count, best time
+- [x] **Sorting Functionality (10 points):** Sort by wins and time (ascending/descending)
 
 ## 🚗 Race (170 points)
 
-- [ ] **Start Engine Animation (20 points):** Engine start with API integration and smooth animation
-- [ ] **Stop Engine Animation (20 points):** Engine stop functionality with position reset
+- [x] **Start Engine Animation (20 points):** Engine start with API integration and smooth animation
+- [x] **Stop Engine Animation (20 points):** Engine stop functionality with position reset
 - [ ] **Responsive Animation (30 points):** Smooth animations on screens down to 500px
-- [ ] **Start Race Button (10 points):** Start race for all cars on current page
-- [ ] **Reset Race Button (15 points):** Reset all cars to starting positions
-- [ ] **Winner Announcement (5 points):** Display winner message with car name
+- [x] **Start Race Button (10 points):** Start race for all cars on current page
+- [x] **Reset Race Button (15 points):** Reset all cars to starting positions
+- [x] **Winner Announcement (5 points):** Display winner message with car name
 - [ ] **Button States (20 points):** Proper button enable/disable states during races
 - [ ] **Actions during the race (50 points):** Controlled actions during active races
 
 ## 🎨 Prettier and ESLint Configuration (10 points)
 
-- [ ] **Prettier Setup (5 points):** Configured with `format` and `ci:format` scripts
-- [ ] **ESLint Configuration (5 points):** Airbnb style guide with `lint` script
+- [x] **Prettier Setup (5 points):** Configured with `format` and `ci:format` scripts
+- [x] **ESLint Configuration (5 points):** Airbnb style guide with `lint` script
 
 ## 🌟 Overall Code Quality (100 points)
 

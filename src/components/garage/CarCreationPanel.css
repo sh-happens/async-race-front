@@ -37,11 +37,13 @@
   border: 2px solid #ddd;
   border-radius: 6px;
   transition: all 0.2s ease;
+  font-size: 16px;
 }
 
 .car-name-input:focus {
   border-color: #007bff;
   box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+  outline: none;
 }
 
 .color-picker-container {
@@ -81,6 +83,12 @@
   justify-content: flex-start;
 }
 
+@media (max-width: 1024px) {
+  .car-creation-panel {
+    padding: 18px;
+  }
+}
+
 @media (max-width: 768px) {
   .form-row {
     flex-direction: column;
@@ -103,8 +111,10 @@
   }
 
   .car-name-input {
-    font-size: 16px;
+    font-size: 16px; 
     padding: 12px;
+    min-height: 48px; 
+    box-sizing: border-box;
   }
 
   .color-picker {
@@ -112,7 +122,52 @@
     height: 50px;
   }
 
+  .color-value {
+    font-size: 13px;
+    padding: 6px 10px;
+  }
+
   .form-actions {
     gap: 8px;
+  }
+  
+  .form-actions button {
+    min-height: 48px;
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 320px) {
+  .car-creation-panel {
+    padding: 12px;
+  }
+  
+  .car-form {
+    gap: 16px;
+  }
+  
+  .form-row {
+    gap: 12px;
+  }
+  
+  .car-name-input {
+    padding: 10px;
+    min-height: 44px;
+  }
+  
+  .color-picker {
+    width: 44px;
+    height: 44px;
+  }
+  
+  .color-value {
+    font-size: 12px;
+    padding: 6px 8px;
+  }
+  
+  .form-actions button {
+    min-height: 44px;
+    font-size: 14px;
+    padding: 10px 16px;
   }
 }
