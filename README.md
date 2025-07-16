@@ -123,11 +123,11 @@ src/
 - `npm run format` - Format code with Prettier
 - `npm run ci:format` - Check formatting issues
 
-## 📋 Implementation Checklist \_\_\_/400 pts
+## 📋 Implementation Checklist 380/400 pts
 
 ## 🚀 UI Deployment
 
-- [ ] **Deployment Platform:** Successfully deploy the UI on GitHub Pages, Netlify, Vercel, Cloudflare Pages, or similar service
+- [x] **Deployment Platform:** Successfully deploy the UI on GitHub Pages, Netlify, Vercel, Cloudflare Pages, or similar service
 
 ## ✅ Requirements to Commits and Repository
 
@@ -172,12 +172,12 @@ src/
 
 - [x] **Start Engine Animation (20 points):** Engine start with API integration and smooth animation
 - [x] **Stop Engine Animation (20 points):** Engine stop functionality with position reset
-- [ ] **Responsive Animation (30 points):** Smooth animations on screens down to 500px
+- [x] **Responsive Animation (30 points):** Smooth animations on screens down to 500px
 - [x] **Start Race Button (10 points):** Start race for all cars on current page
 - [x] **Reset Race Button (15 points):** Reset all cars to starting positions
 - [x] **Winner Announcement (5 points):** Display winner message with car name
 - [ ] **Button States (20 points):** Proper button enable/disable states during races
-- [ ] **Actions during the race (50 points):** Controlled actions during active races
+- [x] **Actions during the race (50 points):** Controlled actions during active races
 
 ## 🎨 Prettier and ESLint Configuration (10 points)
 
