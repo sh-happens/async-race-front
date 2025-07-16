@@ -1,10 +1,10 @@
 # Async Race
 
-## Score: \_\_\_/400 pts
+## Score: 380/400 pts
 
 ## 🚀 Live Demo
 
-**Deployed Application:** [Your Deployment Link Here]
+**Deployed Application:** https://async-race-front.vercel.app/
 
 ---
 
