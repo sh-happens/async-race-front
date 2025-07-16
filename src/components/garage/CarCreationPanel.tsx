@@ -51,8 +51,8 @@ const CarCreationPanel: React.FC = () => {
 
       setCarName('');
       setCarColor('#ff0000');
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
+      console.error(error)
       const action = selectedCar ? 'update' : 'create';
       showError(
         'Operation Failed',

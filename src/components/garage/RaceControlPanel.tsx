@@ -35,8 +35,7 @@ const RaceControlPanel: React.FC = () => {
 
     const startPromises = cars.map(async (car) => {
       try {
-        const engineResult = await dispatch(startEngineThunk(car.id)).unwrap();
-        console.log(`Car ${car.id} engine started for race:`, engineResult);
+        await dispatch(startEngineThunk(car.id)).unwrap();
         return { carId: car.id, success: true };
       } catch (error) {
         console.error(`Failed to start car ${car.id} for race:`, error);

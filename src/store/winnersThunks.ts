@@ -48,8 +48,8 @@ export const saveWinnerThunk = createAsyncThunk(
       };
 
       return await api.updateWinner(carId, updatedWinner);
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
+      console.error(error);
       return await api.createWinner({
         id: carId,
         wins: 1,
@@ -65,8 +65,8 @@ export const deleteWinnerThunk = createAsyncThunk(
     try {
       await api.deleteWinner(carId);
       return carId;
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
+      console.error(error);
       return carId;
     }
   }

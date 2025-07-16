@@ -41,7 +41,6 @@ export const useCarRaceEffects = (
       raceInProgress &&
       carRaceState?.isFinished
     ) {
-      console.log(`Car ${car.id} is the winner!`);
       dispatch(setRaceWinner(car.name));
 
       setTimeout(() => {
@@ -69,7 +68,6 @@ export const useCarRaceEffects = (
       carRaceState?.position > 0 &&
       !carRaceState.isIndividualRace
     ) {
-      console.log(`Resetting car ${car.id} position - general race was reset`);
       dispatch(resetCarRaceState(car.id));
       stopAnimation();
     }
@@ -84,7 +82,6 @@ export const useCarRaceEffects = (
 
   useEffect(() => {
     if (!isRacing && carRaceState?.isAnimating) {
-      console.log(`Car ${car.id} stopped individually - keeping position`);
       dispatch(setCarAnimating({ carId: car.id, isAnimating: false }));
       stopAnimation();
     }
@@ -101,9 +98,6 @@ export const useCarRaceEffects = (
       const isIndividualRace = !raceInProgress;
       dispatch(setCarRaceType({ carId: car.id, isIndividualRace }));
 
-      console.log(
-        `Starting drive for car ${car.id} (${raceInProgress ? 'general race' : 'individual race'})`
-      );
       driveInProgressRef.current = true;
 
       const handleDrive = async () => {
@@ -113,20 +107,15 @@ export const useCarRaceEffects = (
         }
 
         try {
-          console.log(`Sending drive command for car ${car.id}`);
           const driveResult = await dispatch(driveCarThunk(car.id)).unwrap();
 
           if (driveResult.success) {
-            console.log(
-              `Drive successful for car ${car.id}, starting animation`
-            );
             startCarAnimation(
               carRaceState.velocity,
               carRaceState.distance,
               false
             );
           } else {
-            console.log(`Drive failed for car ${car.id}`);
             dispatch(removeRacingCar(car.id));
             driveInProgressRef.current = false;
           }

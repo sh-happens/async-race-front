@@ -56,7 +56,6 @@ export const useCarControls = (car: Car, modalFunctions: ModalFunctions) => {
   ) => {
     if (!isRacing && !driveInProgressRef.current) {
       try {
-        console.log(`Starting individual engine for car ${car.id}`);
         driveInProgressRef.current = false;
         await dispatch(startEngineThunk(car.id)).unwrap();
       } catch (error) {
@@ -73,7 +72,6 @@ export const useCarControls = (car: Car, modalFunctions: ModalFunctions) => {
 
   const handleStopEngine = (stopAnimation: () => void) => {
     if (isRacing) {
-      console.log(`Stopping engine for car ${car.id} - resetting to start`);
       stopAnimation();
       dispatch(stopEngineThunk(car.id));
     }

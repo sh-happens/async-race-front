@@ -44,7 +44,6 @@ export const useCarRaceAnimation = (carId: number) => {
         const elapsed = Date.now() - startTime;
 
         if (willBreakDown && elapsed >= breakDownTime) {
-          console.log(`Car ${carId} broke down at ${elapsed / 1000}s`);
           dispatch(setCarAnimating({ carId, isAnimating: false }));
           dispatch(removeRacingCar(carId));
           driveInProgressRef.current = false;
@@ -65,9 +64,6 @@ export const useCarRaceAnimation = (carId: number) => {
         if (progress < 1) {
           animationRef.current = requestAnimationFrame(animate);
         } else {
-          console.log(
-            `Car ${carId} finished! Time: ${actualRaceTime.toFixed(2)}s`
-          );
           dispatch(finishCarRace({ carId, finalTime: actualRaceTime }));
           dispatch(removeRacingCar(carId));
           dispatch(saveWinnerThunk({ carId, time: actualRaceTime }));
